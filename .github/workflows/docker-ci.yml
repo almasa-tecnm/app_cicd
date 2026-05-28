@@ -16,6 +16,9 @@ jobs:
       - name: Descargar repositorio
         uses: actions/checkout@v4
 
+      - name: Verificar Docker
+        run: docker --version
+
       - name: Construir servicios
         run: docker compose -f docker-compose.yaml build
 
@@ -23,16 +26,17 @@ jobs:
         run: docker compose -f docker-compose.yaml up -d
 
       - name: Esperar servicios
-        run: sleep 15
+        run: sleep 30
+
+      - name: Mostrar contenedores activos
+        run: docker compose -f docker-compose.yaml ps
 
       - name: Probar API
         run: curl --fail http://localhost:3000/health
 
-      - name: Ver contenedores
-        run: docker compose -f docker-compose.yaml ps
-
-      - name: Ver logs de API
-        run: docker compose -f docker-compose.yaml logs api
+      - name: Mostrar logs del Back-End
+        if: always()
+        run: docker compose -f docker-compose.yaml logs backend
 
       - name: Apagar stack
         if: always()
