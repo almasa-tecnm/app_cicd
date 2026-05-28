@@ -1,0 +1,39 @@
+name: Docker CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Construir servicios
+        run: docker compose -f docker-compose.yaml build
+
+      - name: Levantar stack
+        run: docker compose -f docker-compose.yaml up -d
+
+      - name: Esperar servicios
+        run: sleep 15
+
+      - name: Probar API
+        run: curl --fail http://localhost:3000/health
+
+      - name: Ver contenedores
+        run: docker compose -f docker-compose.yaml ps
+
+      - name: Ver logs de API
+        run: docker compose -f docker-compose.yaml logs api
+
+      - name: Apagar stack
+        if: always()
+        run: docker compose -f docker-compose.yaml down

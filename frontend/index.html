@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Demo Docker Compose</title>
+</head>
+<body>
+  <h1>Front-End conectado al Back-End</h1>
+
+  <button onclick="cargarTareas()">Consultar tareas</button>
+
+  <ul id="lista"></ul>
+
+  <script>
+    async function cargarTareas() {
+      const respuesta = await fetch('http://localhost:3000/tasks');
+      const tareas = await respuesta.json();
+
+      const lista = document.getElementById('lista');
+      lista.innerHTML = '';
+
+      tareas.forEach(tarea => {
+        const item = document.createElement('li');
+        item.textContent = tarea.title;
+        lista.appendChild(item);
+      });
+    }
+  </script>
+</body>
+</html>

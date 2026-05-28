@@ -1,0 +1,6 @@
+node_modules
+backend/node_modules
+.env
+.env.prod
+npm-debug.log
+.DS_Store
